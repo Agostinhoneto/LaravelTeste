@@ -11,6 +11,14 @@
 |
 */
 
+use Illuminate\Routing\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+//profiles
+Route::resource('profiles', 'ProfileController');
+
+//reports
+Route::resource('reports', 'ReportController');
