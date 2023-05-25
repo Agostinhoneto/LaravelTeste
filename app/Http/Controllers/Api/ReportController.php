@@ -11,7 +11,7 @@ class ReportController extends Controller
     public function index()
     {
         $reports = Report::all();
-        return response()->json($reports);
+        return response()->json($reports, 201);
     }
 
     public function store(Request $request)
