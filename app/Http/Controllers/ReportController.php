@@ -24,21 +24,14 @@ class ReportController extends Controller
 
     public function show($id)
     {
-        /*
-        $report = DB::table('reports')
-            ->join('profile_reports', 'reports.id', '=', 'profile_reports.report_id')
-            ->join('profiles', 'profiles.id', '=', 'profile_reports.profile_id')
-            ->select('reports.*', 'profiles.first_name as first_name')
-            ->where('reports.id', $id)
-            ->get();
-        dd($report);    
-        */
-        //$report = Report::find($id);
+        
+        
+        $report = Report::find($id);
         $report = Report::with('profiles')->find($id);
-        $profiles = Profile::all();
+        $profile = Profile::first();
 
         //if($report and $profiles) {
-            return view('reports.show', compact('report', 'profiles'));
+            return view('reports.show', compact('report', 'profile'));
         //}else{
          //   return redirect()->route('reports.index')->with('error', 'Registro não encontrado.');
         //}
