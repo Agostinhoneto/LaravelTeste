@@ -12,6 +12,6 @@ class Profile extends Model
 
     public function reports()
     {
-        return $this->belongsToMany(Report::class, 'profile_report', 'profile_id', 'report_id');
+        return $this->belongsToMany(Report::class, 'profile_reports', 'profile_id', 'report_id');
     }
 }

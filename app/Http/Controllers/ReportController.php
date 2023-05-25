@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Profile;
 use App\ProfileReport;
+use Illuminate\Support\Facades\DB;
 use PDF;
 use Swift_Mailer;
 use Swift_Message;
@@ -23,20 +24,32 @@ class ReportController extends Controller
 
     public function show($id)
     {
-        $report = Report::find($id);
-       // $report = Report::with('profiles')->findOrFail($id);
-     //   dd($report);
+        /*
+        $report = DB::table('reports')
+            ->join('profile_reports', 'reports.id', '=', 'profile_reports.report_id')
+            ->join('profiles', 'profiles.id', '=', 'profile_reports.profile_id')
+            ->select('reports.*', 'profiles.first_name as first_name')
+            ->where('reports.id', $id)
+            ->get();
+        dd($report);    
+        */
+        //$report = Report::find($id);
+        $report = Report::with('profiles')->find($id);
         $profiles = Profile::all();
-       // $profiles = $report->profiles;
-        
-        return view('reports.show', compact('report','profiles'));
-     
+
+        //if($report and $profiles) {
+            return view('reports.show', compact('report', 'profiles'));
+        //}else{
+         //   return redirect()->route('reports.index')->with('error', 'Registro não encontrado.');
+        //}
+
+        //return view('reports.show', compact('report', 'profiles'));
     }
 
     public function create()
     {
         $profiles = Profile::all();
-        return view('reports.create', compact('profiles'));        
+        return view('reports.create', compact('profiles'));
     }
 
     public function store(Request $request)
@@ -51,26 +64,25 @@ class ReportController extends Controller
         $report = new Report([
             //'report_id' => $request('id'),
             'title' => $request->input('title'),
-            'description' => $request->input('description'),    
+            'description' => $request->input('description'),
         ]);
         $report->save();
-           
+
         $profileIds = new ProfileReport();
         $profileIds->profile_id = $request->input('profile_id');
-        $profileIds->report_id =$report->id;
-//     dd($profileIds);
+        $profileIds->report_id = $report->id;
         $profileIds->save();
 
 
         // Generate the PDF and get its path
-       /*
+        /*
         $pdfPath = $this->generatePDF($report);
 
         // Send the email with the PDF attachment
         $email = 'agostneto6@gmail.com'; // Replace with your email address
         Mail::to($email)->send(new ReportCreated($report, $pdfPath));
         */
-        return redirect()->route('reports.index');
+        return redirect()->route('reports.index')->with('success', 'Relatório salvo com sucesso!');
     }
 
     public function edit($id)
@@ -96,7 +108,7 @@ class ReportController extends Controller
 
         return redirect()->route('reports.index');
     }
-    
+
     public function generatePDF(Report $report)
     {
         $pdf = PDF::loadView('reports.pdf', compact('report'));

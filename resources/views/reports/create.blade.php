@@ -1,13 +1,18 @@
 <!-- resources/views/reports/create.blade.php -->
 
 @extends('layouts.app')
+@if(session('success'))
+<div class="alert alert-success">
+        {{ session('success') }}
+</div>
+@endif
 
 @section('content')
     <div class="container">
         <h1>Create Report</h1>
         <form action="{{ route('reports.store') }}" method="POST">
             @csrf
-            
+
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" class="form-control" required>

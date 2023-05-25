@@ -2,10 +2,23 @@
 
 @section('content')
     <div class="container">
-        <h1>{{ $report->title }}</h1>
-        <p>{{ $report->description }}</p>
+        <h2>Reports</h2>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+               <td>{{ $report->title }}</td>
+               <td>{{ $report->description }}</td>     
+            </tbody>   
+        </table>
+    </div>    
         <h2>Associated Profiles</h2>
+    <div class="container">     
         <table>
             <thead>
                 <tr>
