@@ -16,8 +16,7 @@ class CreateProfileReportTable extends Migration
         Schema::create('profile_report', function (Blueprint $table) {
             $table->unsignedBigInteger('profile_id');
             $table->unsignedBigInteger('report_id');
-            $table->timestamps();
-
+            
             $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });

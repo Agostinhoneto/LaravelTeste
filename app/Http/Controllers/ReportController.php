@@ -6,7 +6,7 @@ use App\Report;
 use Illuminate\Http\Request;
 //use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ReportCreated;
+use App\Profile;
 use PDF;
 use Swift_Mailer;
 use Swift_Message;
@@ -20,9 +20,23 @@ class ReportController extends Controller
         return view('reports.index', compact('reports'));
     }
 
+    public function show($id)
+    {
+        //$report = Report::find($id);
+        $report = Report::with('profiles')->findOrFail($id);
+
+        $profiles = Profile::all();
+        // dd($report);
+       // $profiles = $report->profiles;
+        
+        return view('reports.show', compact('report','profiles'));
+     
+    }
+
     public function create()
     {
-        return view('reports.create');
+        $profiles = Profile::all();
+        return view('reports.create', compact('profiles'));        
     }
 
     public function store(Request $request)
@@ -34,12 +48,13 @@ class ReportController extends Controller
 
         $report->save();
         // Generate the PDF and get its path
+       /*
         $pdfPath = $this->generatePDF($report);
 
         // Send the email with the PDF attachment
         $email = 'agostneto6@gmail.com'; // Replace with your email address
         Mail::to($email)->send(new ReportCreated($report, $pdfPath));
-
+        */
         return redirect()->route('reports.index');
     }
 
@@ -66,7 +81,7 @@ class ReportController extends Controller
 
         return redirect()->route('reports.index');
     }
-
+    
     public function generatePDF(Report $report)
     {
         $pdf = PDF::loadView('reports.pdf', compact('report'));

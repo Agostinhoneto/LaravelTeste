@@ -15,6 +15,15 @@
                 <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control" required></textarea>
             </div>
+            
+            <div class="form-group">
+                <label for="profile_id">Profiles:</label>
+                <select name="profile_id" id="profile_id" class="form-control">
+                    @foreach ($profiles as $profile)
+                        <option value="{{ $profile->id }}">{{ $profile->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>

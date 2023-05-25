@@ -22,6 +22,7 @@
                         <td>{{ $report->title }}</td>
                         <td>{{ $report->description }}</td>
                         <td>
+                            <a href="{{ route('reports.show', $report->id) }}" class="btn btn-success btn-sm">View Profiles</a>
                             <a href="{{ route('reports.edit', $report->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             <form action="{{ route('reports.destroy', $report->id) }}" method="POST" style="display: inline;">
                                 @csrf

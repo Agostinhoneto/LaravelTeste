@@ -1,22 +1,26 @@
-<div class="container">
-    <h1>Report Details</h1>
+@extends('layouts.app')
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Profile ID</th>
-                <th>Name</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($report->profiles as $profile)
+@section('content')
+    <div class="container">
+        <h1>{{ $report->title }}</h1>
+        <p>{{ $report->description }}</p>
+
+        <h2>Associated Profiles</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ $profile->id }}</td>
-                    <td>{{ $profile->name }}</td>
-                    <td>{{ $profile->email }}</td>
+                    <th>Name</th>
+                    <th>Email</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach($profiles as $profile)
+                    <tr>
+                        <td>{{ $profile->first_name }}</td>
+                        <td>{{ $profile->last_name }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

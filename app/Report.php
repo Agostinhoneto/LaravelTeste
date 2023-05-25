@@ -10,8 +10,5 @@ class Report extends Model
         'title', 'description',
     ];
 
-    public function profiles()
-    {
-        return $this->belongsToMany(Profile::class);
-    }
+   
 }

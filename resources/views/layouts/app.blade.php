@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD - Profiles</title>
+    <title>CRUD - Profiles and Reports</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -18,6 +18,9 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('profiles.index') }}">Profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('reports.index') }}">Reports</a>
                 </li>
             </ul>
         </div>

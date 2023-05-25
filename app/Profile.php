@@ -10,8 +10,4 @@ class Profile extends Model
         'first_name', 'last_name', 'dob', 'gender',
     ];
 
-    public function reports()
-    {
-        return $this->belongsToMany(Report::class);
-    }
 }
