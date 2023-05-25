@@ -101,7 +101,7 @@ class ReportController extends Controller
 
         return redirect()->route('reports.index');
     }
-
+    /*
     public function generatePDF(Report $report)
     {
         $pdf = PDF::loadView('reports.pdf', compact('report'));
@@ -143,4 +143,5 @@ class ReportController extends Controller
 
         $mailer->send($message);
     }
+    */
 }
