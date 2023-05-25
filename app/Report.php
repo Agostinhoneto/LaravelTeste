@@ -9,4 +9,9 @@ class Report extends Model
     protected $fillable = [
         'title', 'description',
     ];
+
+    public function profiles()
+    {
+        return $this->belongsToMany(Profile::class);
+    }
 }
