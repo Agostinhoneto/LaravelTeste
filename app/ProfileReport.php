@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProfileReport extends Model
 {
+    protected $table = 'profile_reports'; 
+
     protected $fillable = [
-        'profile_id', 'report_id',
+        'profile_id', 'reports_id',
     ];
 
     public function profiles()

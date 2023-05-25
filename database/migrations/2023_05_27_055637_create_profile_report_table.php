@@ -13,10 +13,11 @@ class CreateProfileReportTable extends Migration
      */
     public function up()
     {
-        Schema::create('profile_report', function (Blueprint $table) {
+        Schema::create('profile_reports', function (Blueprint $table) {
             $table->unsignedBigInteger('profile_id');
             $table->unsignedBigInteger('report_id');
-            
+            $table->timestamps();
+
             $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });
@@ -29,6 +30,6 @@ class CreateProfileReportTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profile_report');
+        Schema::dropIfExists('profile_reports');
     }
 }

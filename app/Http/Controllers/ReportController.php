@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 //use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Mail;
 use App\Profile;
+use App\ProfileReport;
 use PDF;
 use Swift_Mailer;
 use Swift_Message;
@@ -22,11 +23,10 @@ class ReportController extends Controller
 
     public function show($id)
     {
-        //$report = Report::find($id);
-        $report = Report::with('profiles')->findOrFail($id);
-
+        $report = Report::find($id);
+       // $report = Report::with('profiles')->findOrFail($id);
+     //   dd($report);
         $profiles = Profile::all();
-        // dd($report);
        // $profiles = $report->profiles;
         
         return view('reports.show', compact('report','profiles'));
@@ -41,12 +41,27 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $report = new Report([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
+        /*
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'profile_id.*' => 'exists:profiles,id',
         ]);
-
+        */
+        $report = new Report([
+            //'report_id' => $request('id'),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),    
+        ]);
         $report->save();
+           
+        $profileIds = new ProfileReport();
+        $profileIds->profile_id = $request->input('profile_id');
+        $profileIds->report_id =$report->id;
+//     dd($profileIds);
+        $profileIds->save();
+
+
         // Generate the PDF and get its path
        /*
         $pdfPath = $this->generatePDF($report);
