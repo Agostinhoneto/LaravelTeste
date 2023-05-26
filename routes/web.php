@@ -31,9 +31,12 @@ Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');
 Route::delete('/reports/destroy/{id}', 'ReportController@destroy')->name('reports.destroy');
 Route::get('reports/pdf','ReportController@generatePDF')->name('reports.pdf');
 
+//Route::post('/reports/storeSend', [ReportController::class, 'storeAndSendPDF']);
+Route::post('/sendmail','ReportController@sendmail');
+
 /////
-Route::get('reports/gerar','ReportController@gerarRelatorio')->name('reports.gerar');
-Route::get('reports/enviarEmail/{attachmentPath}','ReportController@enviarEmail')->name('reports.enviar');
+//Route::get('reports/gerar','ReportController@gerarRelatorio')->name('reports.gerar');
+//Route::get('reports/enviarEmail/{attachmentPath}','ReportController@enviarEmail')->name('reports.enviar');
 //////////////////
 
 

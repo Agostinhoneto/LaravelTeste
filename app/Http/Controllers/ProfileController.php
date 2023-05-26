@@ -56,6 +56,7 @@ class ProfileController extends Controller
         $profile->dob = $request->input('dob');
         $profile->gender = $request->input('gender');
         $profile->save();
+        session()->flash('success', 'Profile Editado com sucesso!');
 
         return redirect()->route('profiles.index');
     }
@@ -64,6 +65,7 @@ class ProfileController extends Controller
     {
         $profile = Profile::find($id);
         $profile->delete();
+        session()->flash('success', 'Excluido com sucesso!');
 
         return redirect()->route('profiles.index');
     }

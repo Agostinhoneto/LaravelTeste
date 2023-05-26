@@ -18,6 +18,19 @@ return [
 
     'driver' => env('MAIL_DRIVER', 'smtp'),
 
+    'mailers' => [
+        'smtp' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.gmail.com'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('enviandoemailteste1@gmail.com'),
+            'password' => env('147369@@'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
+    ],
+    
     /*
     |--------------------------------------------------------------------------
     | SMTP Host Address

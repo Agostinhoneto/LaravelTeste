@@ -1,12 +1,4 @@
-<!-- resources/views/reports/create.blade.php -->
-
 @extends('layouts.app')
-@if(session('success'))
-<div class="alert alert-success">
-        {{ session('success') }}
-</div>
-@endif
-
 @section('content')
     <div class="container">
         <h1>Create Report</h1>

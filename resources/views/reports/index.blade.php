@@ -1,11 +1,12 @@
-<!-- resources/views/reports/index.blade.php -->
-
 @extends('layouts.app')
-
 @section('content')
     <div class="container">
         <h1>Reports</h1>
-        @include('components/flash-message')
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <a href="{{ route('reports.create') }}" class="btn btn-primary mb-3">Create Report</a>
         <table class="table">
             <thead>

@@ -5,7 +5,8 @@
     <div class="row">
       <div class="col">
         <header>
-            <h2>Profile : {{ $profile->first_name }}</h2>
+            <h2>Profile : </h2>
+              <p><h3> {{ $profile->first_name }}<h3></p>
         </header>
       </div>
       <div class="col">
@@ -20,8 +21,8 @@
       <div class="col">
         <section>
             <h3>Reports</h3>
-            <p>Title: {{ $report->title }}</p>
-            <p>Description{{ $report->description }}</p>
+            <p> Title: {{ $report->title }}</p>
+            <p>Description: {{ $report->description }}</p>
         </section>
         <a href="{{ route('reports.index') }}">Back to list of reports</a>
       </div>

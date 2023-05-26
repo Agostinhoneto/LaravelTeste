@@ -6,11 +6,9 @@ use App\Report;
 use Illuminate\Http\Request;
 use App\Profile;
 use App\ProfileReport;
+use Illuminate\Support\Facades\Mail;
 use PDF;
-use Swift_Attachment;
-use Swift_Mailer;
-use Swift_Message;
-use Swift_SmtpTransport;
+use App\Mail\ReportMail;
 
 class ReportController extends Controller
 {
@@ -49,6 +47,8 @@ class ReportController extends Controller
         $profileIds->report_id = $report->id;
         $profileIds->save();
         
+       session()->flash('success', 'Reports salvo com sucesso!');
+
         return redirect()->route('reports.index');
     }
 
@@ -64,7 +64,7 @@ class ReportController extends Controller
         $report->title = $request->input('title');
         $report->description = $request->input('description');
         $report->save();
-
+        session()->flash('success', 'Reports Editado com sucesso!');
         return redirect()->route('reports.index');
     }
 
@@ -72,10 +72,28 @@ class ReportController extends Controller
     {
         $report = Report::find($id);
         $report->delete();
-
+        session()->flash('success', 'Reports Excluido com sucesso!');
         return redirect()->route('reports.index');
     }
-////////////////////////////////////////////////////////////
+
+    public function generatePDF()
+    {
+        $report = Report::all();
+        
+        $data = ['titulo' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf',$data, compact('report'));
+        return $pdf->download('teste.pdf');
+    }
+   
+    public function sendmail()
+    {
+        $pdf = PDF::loadView('reports.pdf');
+        $email = 'enviandoemailteste1@gmail.com'; 
+        Mail::to($email)->send(new ReportMail($pdf));
+        return response()->json(compact('this'));   
+    }
+    
+ /*
     public function gerarRelatorio(Request $request)
     {
         // Lógica para gerar o relatório em HTML
@@ -107,15 +125,6 @@ class ReportController extends Controller
         // Remova o arquivo temporário após o envio do e-mail
         unlink($attachmentPath);
     }
-/////////////////////////////////////////////////////////////
-
-    public function generatePDF()
-    {
-        $report = Report::all();
-        
-        $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf',$data, compact('report'));
-        return $pdf->download('teste.pdf');
-    }
-   
+*/
+    
 }
