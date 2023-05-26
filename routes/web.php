@@ -34,6 +34,4 @@ Route::get('/reports/show/{id}', 'ReportController@show')->name('reports.show');
 Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');
 Route::delete('/reports/destroy/{id}', 'ReportController@destroy')->name('reports.destroy');
 Route::get('/reports/pdf','ReportController@generatePDF')->name('reports.pdf');
-//Route::post('/reports/sendmail/{id}','ReportController@sendmail');
-
-Route::post('/reports/{id}/send-email', 'ReportController@sendEmail');
+Route::post('/reports/{id}/send-email', 'ReportController@sendmail');

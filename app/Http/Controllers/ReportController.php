@@ -39,13 +39,30 @@ class ReportController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
         ]);
-
         $report->save();
-
         $profileIds = new ProfileReport();
         $profileIds->profile_id = $request->input('profile_id');
         $profileIds->report_id = $report->id;
         $profileIds->save();
+        
+        // Lógica para criar o PDF do relatório      
+        $data = ['titulo' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
+        //return $pdf->download('teste.pdf');
+        // Envio do e-mail
+        try {
+            Mail::send([], [], function ($message) use ($report,$pdf) {
+                $message->to('agostneto6@gmail.com')
+                    ->subject('Relatório')
+                    ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
+                    ->setBody('Relatório em anexo.');
+            });
+            return response()->json(['message' => 'E-mail enviado com sucesso']);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
+        }
+
 
         session()->flash('success', 'Reports salvo com sucesso!');
 
@@ -75,7 +92,7 @@ class ReportController extends Controller
         session()->flash('success', 'Reports Excluido com sucesso!');
         return redirect()->route('reports.index');
     }
-
+    /*
     public function generatePDF()
     {
         $report = Report::all();
@@ -84,7 +101,7 @@ class ReportController extends Controller
         $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
         return $pdf->download('teste.pdf');
     }
-
+    */
 
 
     public function sendmail($id)
@@ -93,20 +110,21 @@ class ReportController extends Controller
         if (!$report) {
             return response()->json(['message' => 'Relatório não encontrado'], 404);
         }
-        // Lógica para criar o PDF do relatório
+        // Lógica para criar o PDF do relatório      
         $data = ['titulo' => 'Reports Profile'];
         $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
         return $pdf->download('teste.pdf');
         // Envio do e-mail
         try {
-            Mail::send([], [], function ($message) use ($report, $pdf) {
-                $message->to('seu-email@example.com')
+            Mail::send([], [], function ($message) use ($report,$pdf) {
+                $message->to('agostneto6@gmail.com')
                     ->subject('Relatório')
-                    ->attachData($pdf->output(), 'relatorio.pdf', ['mime' => 'application/pdf'])
+                    ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
                     ->setBody('Relatório em anexo.');
             });
             return response()->json(['message' => 'E-mail enviado com sucesso']);
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
         }
     }

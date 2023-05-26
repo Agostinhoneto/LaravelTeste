@@ -73,21 +73,22 @@ class ReportController extends ResponseController
 
     public function sendmail($id)
     {
+       
         $report = Report::find($id);
-    //dd($report);
         if (!$report) {
             return response()->json(['message' => 'Relatório não encontrado'], 404);
         }
+       
         // Lógica para criar o PDF do relatório
         $data = ['titulo' => 'Reports Profile'];
         $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
         return $pdf->download('teste.pdf');
         // Envio do e-mail
         try {
-            Mail::send([], [], function ($message) use ($report, $pdf) {
-                $message->to('seu-email@example.com')
+            Mail::send([], [], function ($message) use ($report) {
+                $message->to('enviandoemailteste1@gmail.com')
                     ->subject('Relatório')
-                    ->attachData($pdf->output(), 'relatorio.pdf', ['mime' => 'application/pdf'])
+                   // ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
                     ->setBody('Relatório em anexo.');
             });
             return response()->json(['message' => 'E-mail enviado com sucesso']);
