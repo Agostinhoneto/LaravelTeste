@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\API\ResponseController as ResponseController;
-use App\ProfileReport;
-use App\Report;
+use App\Models\ProfileReport;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;

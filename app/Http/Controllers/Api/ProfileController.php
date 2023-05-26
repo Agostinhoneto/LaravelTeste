@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Profile;
+use App\Http\Controllers\API\ResponseController as ResponseController;
+use App\Model\Profile;
+
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class ProfileController extends ResponseController
 {
     public function index()
     {
         $profiles = Profile::all();
         return response()->json($profiles);
+    }
+
+    public function show($id)
+    {
+        $profile = Profile::find($id);
+        if (!$profile) {
+            return (new ResponseController)->error('Perfil não encontrado', 404);
+        }
+    
+        return (new ResponseController)->success('Perfil encontrado', $profile);
     }
 
     public function store(Request $request)
@@ -20,26 +31,28 @@ class ProfileController extends Controller
         return response()->json($profile, 201);
     }
 
-    public function show($id)
+    public function update(Request $request, $id)
     {
-        $profile = Profile::find($id);
-        dd($profile);
-        if (!$profile) {
-            return (new ResponseController)->error('Perfil não encontrado', 404);
-        }
     
-        return (new ResponseController)->success('Perfil encontrado', $profile);
-    }
+        $profile = Profile::find($id);
 
-    public function update(Request $request, Profile $profile)
-    {
+        if (!$profile) {
+            return response()->json(['message' => 'Perfil não encontrado'], 404);
+        }
+
         $profile->update($request->all());
         return response()->json($profile);
     }
 
-    public function destroy(Profile $profile)
+    public function destroy($id)
     {
+        $profile = Profile::find($id);
+
+        if (!$profile) {
+            return response()->json(['message' => 'Perfil não encontrado'], 404);
+        }
+
         $profile->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Perfil excluído com sucesso']);
     }
 }
