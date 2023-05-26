@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\ResponseController as ResponseController;
+use App\ProfileReport;
 use App\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
+use Validator;
 
-class ReportController extends Controller
+class ReportController extends ResponseController
 {
     public function index()
     {
@@ -18,14 +20,31 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $report = Report::create($request->all());
-        return response()->json($report, 201);
+        $report = new Report([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+        ]);
+        $report->save();
+
+        $profileIds = new ProfileReport();
+        $profileIds->profile_id = $request->input('profile_id');
+        $profileIds->report_id = $report->id;
+        $profileIds->save();
+                
+        return $this->sendResponse($report->toArray(), 'Reports created successfully.');
     }
 
     public function show($id)
     {
         $report = Report::findOrFail($id);
-        return response()->json($report);
+
+        if (!$report) {
+            return (new ResponseController)->error('Report not found', 404);
+        }
+
+        return (new ResponseController)->success('Report retrieved', $report);
+
+       // return response()->json($report);
     }
 
     public function update(Request $request, $id)

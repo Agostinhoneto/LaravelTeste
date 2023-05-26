@@ -27,6 +27,7 @@
                         <td>{{ $profile->dob}}</td>
                         <td>{{ $profile->gender }}</td>
                         <td>
+                            <a href="{{ route('profiles.show', $profile->id) }}" class="btn btn-success btn-sm">View Profiles</a>
                             <a href="{{ route('profiles.edit', $profile->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             <form action="{{ route('profiles.destroy', $profile->id) }}" method="POST" style="display: inline;">
                                 @csrf

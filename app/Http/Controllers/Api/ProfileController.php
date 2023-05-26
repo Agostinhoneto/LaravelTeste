@@ -20,9 +20,15 @@ class ProfileController extends Controller
         return response()->json($profile, 201);
     }
 
-    public function show(Profile $profile)
+    public function show($id)
     {
-        return response()->json($profile);
+        $profile = Profile::find($id);
+        dd($profile);
+        if (!$profile) {
+            return (new ResponseController)->error('Perfil não encontrado', 404);
+        }
+    
+        return (new ResponseController)->success('Perfil encontrado', $profile);
     }
 
     public function update(Request $request, Profile $profile)

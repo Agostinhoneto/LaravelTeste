@@ -17,14 +17,20 @@ Route::get('/', function () {
 });
 
 //profiles
-Route::resource('profiles', 'ProfileController');
+//Route::resource('profiles', 'ProfileController');
+Route::get('/profiles', 'ProfileController@index')->name('profiles.index');
+Route::get('/profiles/create', 'ProfileController@create')->name('profiles.create');
+Route::post('/profiles/store', 'ProfileController@store')->name('profiles.store');
+Route::put('/profiles/update/{id}', 'ProfileController@update')->name('profiles.update');
+Route::get('/profiles/show/{id}', 'ProfileController@show')->name('profiles.show');
+Route::get('/profiles/edit/{id}', 'ProfileController@edit')->name('profiles.edit');
+Route::delete('/profiles/destroy/{id}', 'ProfileController@destroy')->name('profiles.destroy');
 
 //reports
 //Route::resource('reports', 'ReportController');
 Route::get('/reports', 'ReportController@index')->name('reports.index');
 Route::get('/reports/create', 'ReportController@create')->name('reports.create');
 Route::post('/reports/store', 'ReportController@store')->name('reports.store');
-
 Route::put('/reports/update/{id}', 'ReportController@update')->name('reports.update');
 Route::get('/reports/show/{id}', 'ReportController@show')->name('reports.show');
 Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');

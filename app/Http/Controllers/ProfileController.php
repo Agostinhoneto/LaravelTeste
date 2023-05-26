@@ -14,6 +14,12 @@ class ProfileController extends Controller
         return view('profiles.index', compact('profiles'));
     }
 
+    public function show($id)
+    {
+        $profile = Profile::find($id);
+        return view('profiles.show', compact('profile'));
+    }
+
     public function create()
     {
         return view('profiles.create');
