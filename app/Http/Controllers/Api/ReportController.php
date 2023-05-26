@@ -31,20 +31,32 @@ class ReportController extends ResponseController
         $profileIds->report_id = $report->id;
         $profileIds->save();
 
+        $data = ['titulo' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
+        // Envio do e-mail
+        try {
+            Mail::send([], [], function ($message) use ($report,$pdf) {
+                $message->to('agostneto6@gmail.com')
+                    ->subject('Reports and PDF')
+                    ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
+                    ->setBody(' Reports Saved Successfully attached.
+                                Follow PDF in Attachment'
+                      );
+            });
+            session()->flash('success', 'Reports successfully saved!');
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'There was an error sending the email'], 500);
+        }
         return $this->sendResponse($report->toArray(), 'Reports created successfully.');
     }
 
     public function show($id)
     {
         $report = Report::findOrFail($id);
-
         if (!$report) {
             return (new ResponseController)->error('Report not found', 404);
         }
-
         return (new ResponseController)->success('Report retrieved', $report);
-
-        // return response()->json($report);
     }
 
     public function update(Request $request, $id)
@@ -52,48 +64,19 @@ class ReportController extends ResponseController
         $report = Report::find($id);
 
         if (!$report) {
-            return response()->json(['message' => 'Relatório não encontrado'], 404);
+            return response()->json(['message' => 'report not found'], 404);
         }
-
         $report->update($request->all());
-        return response()->json($report);
+        return response()->json(['message' => 'Reports Edited successfully!'], 200);
     }
 
     public function destroy($id)
     {
         $report = Report::find($id);
-
         if (!$report) {
-            return response()->json(['message' => 'Relatório não encontrado'], 404);
+            return response()->json(['message' => 'report not found'], 404);
         }
-
         $report->delete();
-        return response()->json(['message' => 'Relatório excluído com sucesso']);
-    }
-
-    public function sendmail($id)
-    {
-       
-        $report = Report::find($id);
-        if (!$report) {
-            return response()->json(['message' => 'Relatório não encontrado'], 404);
-        }
-       
-        // Lógica para criar o PDF do relatório
-        $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
-        return $pdf->download('teste.pdf');
-        // Envio do e-mail
-        try {
-            Mail::send([], [], function ($message) use ($report) {
-                $message->to('enviandoemailteste1@gmail.com')
-                    ->subject('Relatório')
-                   // ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
-                    ->setBody('Relatório em anexo.');
-            });
-            return response()->json(['message' => 'E-mail enviado com sucesso']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
-        }
+        return response()->json(['message' => 'Reports Deleted Successfully!'],200);
     }
 }

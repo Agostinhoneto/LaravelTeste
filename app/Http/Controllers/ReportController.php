@@ -35,37 +35,38 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $report = new Report([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|max:255',
         ]);
+        
+        $report = new Report();
+        $report->title = $validatedData['title'];
+        $report->description = $validatedData['description'];
         $report->save();
+
         $profileIds = new ProfileReport();
         $profileIds->profile_id = $request->input('profile_id');
         $profileIds->report_id = $report->id;
         $profileIds->save();
-        
-        // Lógica para criar o PDF do relatório      
-        $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
-        //return $pdf->download('teste.pdf');
+
+        $data = ['Title' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf', $data);
+
         // Envio do e-mail
         try {
             Mail::send([], [], function ($message) use ($report,$pdf) {
                 $message->to('agostneto6@gmail.com')
-                    ->subject('Relatório')
+                    ->subject('Reports and PDF')
                     ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
-                    ->setBody('Relatório em anexo.');
+                    ->setBody(' Reports Saved Successfully attached.
+                                Follow PDF in Attachment'
+                      );
             });
-            return response()->json(['message' => 'E-mail enviado com sucesso']);
+            session()->flash('success', 'Reports successfully saved!');
         } catch (\Exception $e) {
-            dd($e);
-            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
+            return response()->json(['message' => 'There was an error sending the email'], 500);
         }
-
-
-        session()->flash('success', 'Reports salvo com sucesso!');
-
         return redirect()->route('reports.index');
     }
 
@@ -81,7 +82,7 @@ class ReportController extends Controller
         $report->title = $request->input('title');
         $report->description = $request->input('description');
         $report->save();
-        session()->flash('success', 'Reports Editado com sucesso!');
+        session()->flash('success', 'Reports Edited successfully!');
         return redirect()->route('reports.index');
     }
 
@@ -89,44 +90,7 @@ class ReportController extends Controller
     {
         $report = Report::find($id);
         $report->delete();
-        session()->flash('success', 'Reports Excluido com sucesso!');
+        session()->flash('success', 'Reports Deleted Successfully!');
         return redirect()->route('reports.index');
     }
-    /*
-    public function generatePDF()
-    {
-        $report = Report::all();
-
-        $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
-        return $pdf->download('teste.pdf');
-    }
-    */
-
-
-    public function sendmail($id)
-    {
-        $report = Report::find($id);
-        if (!$report) {
-            return response()->json(['message' => 'Relatório não encontrado'], 404);
-        }
-        // Lógica para criar o PDF do relatório      
-        $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
-        return $pdf->download('teste.pdf');
-        // Envio do e-mail
-        try {
-            Mail::send([], [], function ($message) use ($report,$pdf) {
-                $message->to('agostneto6@gmail.com')
-                    ->subject('Relatório')
-                    ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
-                    ->setBody('Relatório em anexo.');
-            });
-            return response()->json(['message' => 'E-mail enviado com sucesso']);
-        } catch (\Exception $e) {
-            dd($e);
-            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
-        }
-    }
-  
 }
