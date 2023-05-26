@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Report;
+use App\Model\Report;
 use Illuminate\Http\Request;
-use App\Profile;
-use App\ProfileReport;
+use App\Model\Profile;
+use App\Model\ProfileReport;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 use App\Mail\ReportMail;

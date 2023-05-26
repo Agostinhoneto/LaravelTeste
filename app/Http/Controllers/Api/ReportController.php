@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\API\ResponseController as ResponseController;
 use App\Models\ProfileReport;
-use App\Models\Report;
+use App\Model\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
