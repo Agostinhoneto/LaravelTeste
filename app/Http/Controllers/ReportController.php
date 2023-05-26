@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReportRequest;
 use App\Report;
 use Illuminate\Http\Request;
-//use Barryvdh\DomPDF\PDF;
-use Illuminate\Support\Facades\Mail;
 use App\Profile;
 use App\ProfileReport;
-use Illuminate\Support\Facades\Validator;
 use PDF;
+use Swift_Attachment;
+use Swift_Mailer;
+use Swift_Message;
+use Swift_SmtpTransport;
 
 class ReportController extends Controller
 {
@@ -74,52 +74,47 @@ class ReportController extends Controller
 
         return redirect()->route('reports.index');
     }
-
+////////////////////////////////////////////////////////////
+    public function gerarRelatorio(Request $request)
+    {
+        // Lógica para gerar o relatório em HTML
+        $html = '<h1>Relatório</h1>';
+        
+        // Gere o PDF usando o Dompdf
+        $pdf = PDF::loadHTML($html);
+        
+        // Salve o PDF em um diretório temporário
+        $path = storage_path('files.pdf');
+        $pdf->save($path);
+        
+        // Envie o e-mail com o anexo
+        $this->enviarEmail($path);
+        
+        // Retorne uma resposta adequada ao usuário
+        return response()->json(['message' => 'Relatório gerado e enviado por e-mail.']);
+    }
     
+    public function enviarEmail($attachmentPath)
+    {
+        // Use a biblioteca de envio de e-mails do Laravel para enviar o e-mail com o anexo
+        \Mail::raw('Veja o anexo para o relatório.', function($message) use ($attachmentPath) {
+            $message->to('agostneto6@gmail.com')
+                    ->subject('Relatório')
+                    ->attach($attachmentPath);
+        });
+        
+        // Remova o arquivo temporário após o envio do e-mail
+        unlink($attachmentPath);
+    }
+/////////////////////////////////////////////////////////////
+
     public function generatePDF()
     {
         $report = Report::all();
-        $pdf = PDF::loadView('reports.pdf', with('report'));
-        return view('reports.pdf', compact('report', 'profile'));
-           /*
-        $pdfPath = storage_path('app/public/reports/') . 'report_' . $report->id . '.pdf';
-        $pdf->save($pdfPath);
-
-        return $pdfPath;
-        */    
+        
+        $data = ['titulo' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf',$data, compact('report'));
+        return $pdf->download('teste.pdf');
     }
-
-    /*
-    public function saveAndSendReport(Request $request)
-    {
-        // Generate the PDF
-        $pdf = PDF::loadView('reports.report', ['data' => $request->data]);
-        $pdfContent = $pdf->output();
-
-        // Save the PDF file
-        $pdfPath = storage_path('app/reports/report.pdf');
-        file_put_contents($pdfPath, $pdfContent);
-
-        // Send the email
-        $this->sendEmailWithAttachment($pdfPath);
-
-        return response()->json(['message' => 'Report saved and email sent.']);
-    }
-
-    private function sendEmailWithAttachment($filePath)
-    {
-        $mailer = app()->make(Swift_Mailer::class);
-
-        $message = new Swift_Message();
-        $message->setSubject('Report PDF');
-        $message->setFrom(['your_email@example.com' => 'Your Name']);
-        $message->setTo(['recipient@example.com']);
-        $message->setBody('Please find the attached report PDF.');
-
-        $attachment = new Swift_Attachment(file_get_contents($filePath), 'report.pdf', 'application/pdf');
-        $message->attach($attachment);
-
-        $mailer->send($message);
-    }
-    */
+   
 }
