@@ -10,7 +10,7 @@
 @section('content')
     <div class="container">
         <h1>Create Report</h1>
-        <form action="{{ route('reports/store') }}" method="POST">
+        <form action="{{ route('reports.store') }}" method="POST">
             @csrf
 
             <div class="form-group">

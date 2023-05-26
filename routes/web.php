@@ -22,7 +22,9 @@ Route::resource('profiles', 'ProfileController');
 //reports
 //Route::resource('reports', 'ReportController');
 Route::get('/reports', 'ReportController@index')->name('reports.index');
-Route::post('/reports/create', 'ReportController@create')->name('reports.create');
+Route::get('/reports/create', 'ReportController@create')->name('reports.create');
+Route::post('/reports/store', 'ReportController@store')->name('reports.store');
+
 Route::put('/reports/update/{id}', 'ReportController@update')->name('reports.update');
 Route::get('/reports/show/{id}', 'ReportController@show')->name('reports.show');
 Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');

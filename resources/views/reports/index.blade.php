@@ -5,6 +5,7 @@
 @section('content')
     <div class="container">
         <h1>Reports</h1>
+        @include('components/flash-message')
         <a href="{{ route('reports.create') }}" class="btn btn-primary mb-3">Create Report</a>
         <table class="table">
             <thead>
@@ -34,5 +35,6 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $reports->links()}}
     </div>
 @endsection

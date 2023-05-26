@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
     public function index()
     {
-        $profiles = Profile::all();
+        $profiles = Profile::paginate(10);;
         return view('profiles.index', compact('profiles'));
     }
 
@@ -20,6 +21,13 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string',
+            'dob'       => 'required',
+            'gender'    => 'required',
+        ]);
+
         $profile = new Profile([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -28,6 +36,8 @@ class ProfileController extends Controller
         ]);
 
         $profile->save();
+
+        session()->flash('success', 'Perfil armazenado com sucesso');
 
         return redirect()->route('profiles.index');
     }

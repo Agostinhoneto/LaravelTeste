@@ -5,6 +5,7 @@
 @section('content')
     <div class="container">
         <h1>Profiles</h1>
+        @include('components/flash-message')
         <a href="{{ route('profiles.create') }}" class="btn btn-primary mb-3">Create Profile</a>
         <table class="table">
             <thead>
@@ -23,7 +24,7 @@
                         <td>{{ $profile->id }}</td>
                         <td>{{ $profile->first_name }}</td>
                         <td>{{ $profile->last_name }}</td>
-                        <td>{{ $profile->dob }}</td>
+                        <td>{{ $profile->dob}}</td>
                         <td>{{ $profile->gender }}</td>
                         <td>
                             <a href="{{ route('profiles.edit', $profile->id) }}" class="btn btn-primary btn-sm">Edit</a>
@@ -37,5 +38,6 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $profiles->links()}}
     </div>
 @endsection
