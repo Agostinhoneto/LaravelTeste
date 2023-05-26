@@ -59,9 +59,7 @@ class ReportController extends Controller
                 $message->to('agostneto6@gmail.com')
                     ->subject('Reports and PDF')
                     ->attachData($pdf->output(), 'reports.pdf', ['mime' => 'application/pdf'])
-                    ->setBody(' Reports Saved Successfully attached.
-                                Follow PDF in Attachment'
-                      );
+                    ->setBody('Congratulations, the report was successfully saved, the PDF file is attached!');
             });
             session()->flash('success', 'Reports successfully saved!');
         } catch (\Exception $e) {
@@ -78,9 +76,15 @@ class ReportController extends Controller
 
     public function update(Request $request, $id)
     {
+        
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|max:255',
+        ]);
+        
         $report = Report::find($id);
-        $report->title = $request->input('title');
-        $report->description = $request->input('description');
+        $report->title = $validatedData['title'];
+        $report->description = $validatedData['description'];
         $report->save();
         session()->flash('success', 'Reports Edited successfully!');
         return redirect()->route('reports.index');

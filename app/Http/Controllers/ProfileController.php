@@ -27,19 +27,18 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string',
             'dob'       => 'required',
             'gender'    => 'required',
         ]);
 
-        $profile = new Profile([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'dob' => $request->input('dob'),
-            'gender' => $request->input('gender'),
-        ]);
+        $profile = new Profile();
+            $profile->first_name = $validatedData['first_name'];
+            $profile->last_name = $validatedData['last_name'];
+            $profile->dob = $validatedData['dob'];
+            $profile->gender = $validatedData['gender'];
 
         $profile->save();
 
@@ -56,12 +55,20 @@ class ProfileController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string',
+            'dob'       => 'required',
+            'gender'    => 'required',
+        ]);
+        
         $profile = Profile::find($id);
-        $profile->first_name = $request->input('first_name');
-        $profile->last_name = $request->input('last_name');
-        $profile->dob = $request->input('dob');
-        $profile->gender = $request->input('gender');
+        $profile->first_name = $validatedData['first_name'];
+        $profile->last_name = $validatedData['last_name'];
+        $profile->dob = $validatedData['dob'];
+        $profile->gender = $validatedData['gender'];
         $profile->save();
+
         session()->flash('success', 'Profile Edit successfully !');
 
         return redirect()->route('profiles.index');
