@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="{{ asset('css/report.css') }}">
+<script src="{{ asset('js/report.js') }}"></script>
+
 <!DOCTYPE html>
 <html>
 <head>

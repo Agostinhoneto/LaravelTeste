@@ -11,7 +11,6 @@
 |
 */
 
-//use Illuminate\Routing\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +20,15 @@ Route::get('/', function () {
 Route::resource('profiles', 'ProfileController');
 
 //reports
-Route::resource('reports', 'ReportController');
+//Route::resource('reports', 'ReportController');
+Route::get('/reports', 'ReportController@index')->name('reports.index');
+Route::post('/reports/create', 'ReportController@create')->name('reports.create');
+Route::put('/reports/update/{id}', 'ReportController@update')->name('reports.update');
+Route::get('/reports/show/{id}', 'ReportController@show')->name('reports.show');
+Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');
+Route::delete('/reports/destroy/{id}', 'ReportController@destroy')->name('reports.destroy');
+Route::get('reports/pdf','ReportController@generatePDF')->name('reports.pdf');
 
+
+///
 Route::post('/save-report', 'ReportController@saveAndSendReport');
