@@ -15,10 +15,10 @@ class ReportController extends Controller
     public function index()
     {
         $reports = Report::paginate(10);
-        
+
         return view('reports.index', compact('reports'));
     }
-    
+
     public function show($id)
     {
         $report = Report::find($id);
@@ -41,13 +41,13 @@ class ReportController extends Controller
         ]);
 
         $report->save();
-        
+
         $profileIds = new ProfileReport();
         $profileIds->profile_id = $request->input('profile_id');
         $profileIds->report_id = $report->id;
         $profileIds->save();
-        
-       session()->flash('success', 'Reports salvo com sucesso!');
+
+        session()->flash('success', 'Reports salvo com sucesso!');
 
         return redirect()->route('reports.index');
     }
@@ -79,52 +79,36 @@ class ReportController extends Controller
     public function generatePDF()
     {
         $report = Report::all();
-        
+
         $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf',$data, compact('report'));
+        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
         return $pdf->download('teste.pdf');
     }
-   
-    public function sendmail()
+
+
+
+    public function sendmail($id)
     {
-        $pdf = PDF::loadView('reports.pdf');
-        $email = 'enviandoemailteste1@gmail.com'; 
-        Mail::to($email)->send(new ReportMail($pdf));
-        return response()->json(compact('this'));   
-    }
-    
- /*
-    public function gerarRelatorio(Request $request)
-    {
-        // Lógica para gerar o relatório em HTML
-        $html = '<h1>Relatório</h1>';
-        
-        // Gere o PDF usando o Dompdf
-        $pdf = PDF::loadHTML($html);
-        
-        // Salve o PDF em um diretório temporário
-        $path = storage_path('files.pdf');
-        $pdf->save($path);
-        
-        // Envie o e-mail com o anexo
-        $this->enviarEmail($path);
-        
-        // Retorne uma resposta adequada ao usuário
-        return response()->json(['message' => 'Relatório gerado e enviado por e-mail.']);
-    }
-    
-    public function enviarEmail($attachmentPath)
-    {
-        // Use a biblioteca de envio de e-mails do Laravel para enviar o e-mail com o anexo
-        \Mail::raw('Veja o anexo para o relatório.', function($message) use ($attachmentPath) {
-            $message->to('agostneto6@gmail.com')
+        $report = Report::find($id);
+        if (!$report) {
+            return response()->json(['message' => 'Relatório não encontrado'], 404);
+        }
+        // Lógica para criar o PDF do relatório
+        $data = ['titulo' => 'Reports Profile'];
+        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
+        return $pdf->download('teste.pdf');
+        // Envio do e-mail
+        try {
+            Mail::send([], [], function ($message) use ($report, $pdf) {
+                $message->to('seu-email@example.com')
                     ->subject('Relatório')
-                    ->attach($attachmentPath);
-        });
-        
-        // Remova o arquivo temporário após o envio do e-mail
-        unlink($attachmentPath);
+                    ->attachData($pdf->output(), 'relatorio.pdf', ['mime' => 'application/pdf'])
+                    ->setBody('Relatório em anexo.');
+            });
+            return response()->json(['message' => 'E-mail enviado com sucesso']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
+        }
     }
-*/
-    
+  
 }

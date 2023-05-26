@@ -30,7 +30,7 @@ class ReportController extends ResponseController
         $profileIds->profile_id = $request->input('profile_id');
         $profileIds->report_id = $report->id;
         $profileIds->save();
-                
+
         return $this->sendResponse($report->toArray(), 'Reports created successfully.');
     }
 
@@ -44,41 +44,55 @@ class ReportController extends ResponseController
 
         return (new ResponseController)->success('Report retrieved', $report);
 
-       // return response()->json($report);
+        // return response()->json($report);
     }
 
     public function update(Request $request, $id)
     {
-        $report = Report::findOrFail($id);
+        $report = Report::find($id);
+
+        if (!$report) {
+            return response()->json(['message' => 'Relatório não encontrado'], 404);
+        }
+
         $report->update($request->all());
         return response()->json($report);
     }
 
     public function destroy($id)
     {
-        $report = Report::findOrFail($id);
+        $report = Report::find($id);
+
+        if (!$report) {
+            return response()->json(['message' => 'Relatório não encontrado'], 404);
+        }
+
         $report->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Relatório excluído com sucesso']);
     }
 
-
-    public function sendmail(Request $request)
+    public function sendmail($id)
     {
-        dd('aqui');
-        /*
-        $data["email"] = $request->get("email");
-        $data["client_name"] = $request->get("client_name");
-        $data["subject"] = $request->get("subject");
-
-        $report = Report::all();
+        $report = Report::find($id);
+    //dd($report);
+        if (!$report) {
+            return response()->json(['message' => 'Relatório não encontrado'], 404);
+        }
+        // Lógica para criar o PDF do relatório
         $data = ['titulo' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf');
-        Mail::send('mails.mail', $data, function ($message) use ($data, $pdf) {
-            $message->to($data["email"], $data["client_name"])
-                ->subject($data["subject"])
-                ->attachData($pdf->output(), "invoice.pdf");
-        });
-        return response()->json(compact('this'));
-        */
+        $pdf = PDF::loadView('reports.pdf', $data, compact('report'));
+        return $pdf->download('teste.pdf');
+        // Envio do e-mail
+        try {
+            Mail::send([], [], function ($message) use ($report, $pdf) {
+                $message->to('seu-email@example.com')
+                    ->subject('Relatório')
+                    ->attachData($pdf->output(), 'relatorio.pdf', ['mime' => 'application/pdf'])
+                    ->setBody('Relatório em anexo.');
+            });
+            return response()->json(['message' => 'E-mail enviado com sucesso']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Ocorreu um erro ao enviar o e-mail'], 500);
+        }
     }
 }

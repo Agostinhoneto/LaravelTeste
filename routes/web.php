@@ -16,8 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//profiles
-//Route::resource('profiles', 'ProfileController');
+//PROFILES
 Route::get('/profiles', 'ProfileController@index')->name('profiles.index');
 Route::get('/profiles/create', 'ProfileController@create')->name('profiles.create');
 Route::post('/profiles/store', 'ProfileController@store')->name('profiles.store');
@@ -26,8 +25,7 @@ Route::get('/profiles/show/{id}', 'ProfileController@show')->name('profiles.show
 Route::get('/profiles/edit/{id}', 'ProfileController@edit')->name('profiles.edit');
 Route::delete('/profiles/destroy/{id}', 'ProfileController@destroy')->name('profiles.destroy');
 
-//reports
-//Route::resource('reports', 'ReportController');
+//REPORTS
 Route::get('/reports', 'ReportController@index')->name('reports.index');
 Route::get('/reports/create', 'ReportController@create')->name('reports.create');
 Route::post('/reports/store', 'ReportController@store')->name('reports.store');
@@ -35,15 +33,7 @@ Route::put('/reports/update/{id}', 'ReportController@update')->name('reports.upd
 Route::get('/reports/show/{id}', 'ReportController@show')->name('reports.show');
 Route::get('/reports/edit/{id}', 'ReportController@edit')->name('reports.edit');
 Route::delete('/reports/destroy/{id}', 'ReportController@destroy')->name('reports.destroy');
-Route::get('reports/pdf','ReportController@generatePDF')->name('reports.pdf');
+Route::get('/reports/pdf','ReportController@generatePDF')->name('reports.pdf');
+//Route::post('/reports/sendmail/{id}','ReportController@sendmail');
 
-//Route::post('/reports/storeSend', [ReportController::class, 'storeAndSendPDF']);
-Route::post('/sendmail','ReportController@sendmail');
-
-/////
-//Route::get('reports/gerar','ReportController@gerarRelatorio')->name('reports.gerar');
-//Route::get('reports/enviarEmail/{attachmentPath}','ReportController@enviarEmail')->name('reports.enviar');
-//////////////////
-
-
-Route::post('/save-report', 'ReportController@saveAndSendReport');
+Route::post('/reports/{id}/send-email', 'ReportController@sendEmail');
