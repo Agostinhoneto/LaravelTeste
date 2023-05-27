@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Model\Profile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {

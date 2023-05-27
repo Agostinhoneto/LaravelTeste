@@ -8,14 +8,12 @@ use App\Model\Profile;
 use App\Model\ProfileReport;
 use Illuminate\Support\Facades\Mail;
 use PDF;
-use App\Mail\ReportMail;
 
 class ReportController extends Controller
 {
     public function index()
     {
         $reports = Report::paginate(10);
-
         return view('reports.index', compact('reports'));
     }
 
@@ -50,10 +48,12 @@ class ReportController extends Controller
         $profileIds->report_id = $report->id;
         $profileIds->save();
 
-        $data = ['Title' => 'Reports Profile'];
-        $pdf = PDF::loadView('reports.pdf', $data);
+        $title = $report->title;
+        $description = $report->description;
 
-        // Envio do e-mail
+        $pdf = PDF::loadView('reports.pdf', compact('title', 'description'));
+
+        // Send e-mail
         try {
             Mail::send([], [], function ($message) use ($report,$pdf) {
                 $message->to('agostneto6@gmail.com')

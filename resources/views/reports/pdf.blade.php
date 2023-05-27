@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <style>
-        /* Estilos CSS para o PDF */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        h1 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        p {
-            margin-bottom: 5px;
-        }
-    </style>
+<meta charset="utf-8">
+<title>Reports</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #666;
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+</style>  
 </head>
 <body>
-    <h1>Relatório</h1>
-    <p><strong>Título:</strong></p>
-    <p><strong>Descrição:</strong> </p>
+    <div class="container">
+        <h1>Reports</h1>
+        <p>Title: {{ $title }}</p>
+        <p>Description: {{ $description }}</p>
+    </div>
 </body>
 </html>
+   
+

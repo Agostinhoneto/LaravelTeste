@@ -1,7 +1,6 @@
-document.getElementById('print-report-btn').addEventListener('click', function() {
-    // Logic to print the report
-});
-
-window.onload = function() {
-    alert("Bem-vindo à visualização do relatório!");
-};
+function handleClick() {
+    alert('Clique no botão!');
+  } 
+  var button = document.querySelector('.button');
+  button.addEventListener('click', handleClick);
+  
